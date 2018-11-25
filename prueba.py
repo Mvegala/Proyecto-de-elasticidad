@@ -2,7 +2,6 @@ import networkx as net
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 relaciones = [['e', 'h'], ['h', 's'], ['h', 'g'], ['h', 'hx'], ['s', 'g'], ['s', 'v'], ['s', 's'],
                            ['s', 'sx'], ['v', 'g'], ['v', 'vx'], ['g', 'b'], ['g', 'c'], ['g', 'gx'], ['b', 'bx'],
                            ['c', 'cx']]
@@ -92,6 +91,6 @@ print vecinosS
 
 for n in range(len(vecinosS)):
     print vecinosS[n]
-
+# faltan
 # Vs = Vh *
 
