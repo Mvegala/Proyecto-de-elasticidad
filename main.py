@@ -54,19 +54,6 @@ dfD = pd.DataFrame(Dem, index=statesD, columns=statesE)
 #V = pd.Series(v_data, index=states)
 
 # ----------------------------------------------------
-#hay que modificarlo
-def Vx(V, M, state):
-    # get visits data
-    vs = V.values
-
-    # get visit probabilities for given state
-    ps = M[state].values
-
-    vx_value = np.dot(vs, ps)
-
-    return vx_value
-
-# ----------------------------------------------------
 
 def VA(M):
     
@@ -140,6 +127,24 @@ def Px(M,state1,state2):
     return px
 
 #-----------------------------------------------------
+
+# devuelve los vecinos del estado pasado
+
+def neighbors(M,state):
+    neig = dfA[dfA[state] > 0]
+    return neig
+#-----------------------------------------------------
+
+# calcula la carga para cada visita
+ #lambda->vector que almacena la tasa de llegada para cada clase de operación
+def lambdaF(gamma,fa,fb,state):
+    visitA = VA(dfA)
+    visitB = VB(dfB)
+    lan = gamma * (fa * visitA[state] + fb * visitB[state])
+    return lan
+
+#-----------------------------------------------------
+
 # Metodo para Calcular la Utilidad: Mide cuan útil es la configuración del momento
 #CPU (i)
 #h(r)
@@ -159,21 +164,16 @@ def Ux(i,N):
     return ux
 
 #-----------------------------------------------------
+# Metodo para Calcular los tiempos de respuesta
+#Tengo dudas de como hacerlo, ver con Ivan
 
-# calcula la carga para cada visita
- #lambda->vector que almacena la tasa de llegada para cada clase de operación
-def lambdaF(gamma,fa,fb,state):
-    visitA = VA(dfA)
-    visitB = VB(dfB)
-    lan = gamma * (fa * visitA[state] + fb * visitB[state])
-    return lan
+def Rx(i,N):
+    rx=0
+    for es in statesE:
+        dem = Px(dfD,i,es)
+        rx += dem/1 - Ux(i,N)
+    return rx
 
-#-----------------------------------------------------
-# devuelve los vecinos del estado pasado
-
-def neighbors(M,state):
-    neig = dfA[dfA[state] > 0]
-    return neig
 #-----------------------------------------------------
 
 if __name__ == '__main__':
@@ -192,11 +192,15 @@ if __name__ == '__main__':
         hx.append(lambdaF(gamma,fa,fb,i))
     
     ux = []
-    #r = lambdaF(gamma,fa,fb,'h')
     N = 3
-    i = 'WS-CPU'
+    
     for i in statesD:
         ux.append(Ux(i,N))
+        
+    rx = []
+    
+    for i in statesD:
+        rx.append(Rx(i,N))    
    
    
     print("obtención de las visitas: A")
@@ -207,4 +211,6 @@ if __name__ == '__main__':
     print(hx)
     print("obtención de las utilidades")
     print(ux)
+    print("obtención de los tiempos de respuesta")
+    print(rx)
 
